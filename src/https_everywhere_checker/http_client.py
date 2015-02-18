@@ -241,6 +241,8 @@ class HTTPFetcher(object):
 				raise HTTPFetcherError("Could not resolve host")
 			elif "Resolving timed out after" in unpickled.errorStr:
 				raise HTTPFetcherError("Resolving timeout")
+			elif "Operation timed out after" in unpickled.errorStr:
+				raise HTTPFetcherError("Operation timeout")
 			elif "Error in protocol version" in unpickled.errorStr:
 				raise HTTPFetcherError("gnutls: protocol version error")
 			elif "server certificate verification failed." in unpickled.errorStr:
