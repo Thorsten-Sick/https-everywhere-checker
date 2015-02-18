@@ -239,6 +239,16 @@ class HTTPFetcher(object):
 			assert unpickled.shortError is not None
 			if "Could not resolve host" in unpickled.errorStr:
 				raise HTTPFetcherError("Could not resolve host")
+			elif "Resolving timed out after" in unpickled.errorStr:
+				raise HTTPFetcherError("Resolving timeout")
+			elif "Error in protocol version" in unpickled.errorStr:
+				raise HTTPFetcherError("gnutls: protocol version error")
+			elif "server certificate verification failed." in unpickled.errorStr:
+				raise HTTPFetcherError("gnutls: certificate verification failed")
+			elif "The server name sent was not recognized" in unpickled.errorStr:
+				raise HTTPFetcherError("gnutls: server name not recognized")
+			elif "The TLS connection was non-properly terminated." in unpickled.errorStr:
+				raise HTTPFetcherError("gnutls: termination error")
 			else:
 				raise HTTPFetcherError("Fetcher subprocess error: %s\n%s" % \
 					(unpickled.shortError, unpickled.errorStr))
