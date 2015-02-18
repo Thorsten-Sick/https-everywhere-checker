@@ -237,8 +237,11 @@ class HTTPFetcher(object):
 				type(unpickled))
 		if unpickled.errorStr: #chained exception tracebacks are bit ugly/long
 			assert unpickled.shortError is not None
-			raise HTTPFetcherError("Fetcher subprocess error: %s\n%s" % \
-				(unpickled.shortError, unpickled.errorStr))
+			if "Could not resolve host" in unpickled.errorStr:
+				raise HTTPFetcherError("Could not resolve host")
+			else:
+				raise HTTPFetcherError("Fetcher subprocess error: %s\n%s" % \
+					(unpickled.shortError, unpickled.errorStr))
 			
 		return unpickled
 		
