@@ -243,6 +243,8 @@ class HTTPFetcher(object):
 				raise HTTPFetcherError("Resolving timeout")
 			elif "Operation timed out after" in unpickled.errorStr:
 				raise HTTPFetcherError("Operation timeout")
+			elif "Connection timed out after" in unpickled.errorStr:
+				raise HTTPFetcherError("Connection timeout")
 			elif "Error in protocol version" in unpickled.errorStr:
 				raise HTTPFetcherError("gnutls: protocol version error")
 			elif "server certificate verification failed." in unpickled.errorStr:
@@ -251,6 +253,22 @@ class HTTPFetcher(object):
 				raise HTTPFetcherError("gnutls: server name not recognized")
 			elif "The TLS connection was non-properly terminated." in unpickled.errorStr:
 				raise HTTPFetcherError("gnutls: termination error")
+			elif "gnutls_handshake() failed: Handshake failed" in unpickled.errorStr:
+				raise HTTPFetcherError("gnutls: handshake failed")
+			elif "gnutls_handshake() failed: A record packet with illegal version was received." in unpickled.errorStr:
+				raise HTTPFetcherError("gnutls: handshake fail, illegal version")
+			elif "does not match target host name" and "SSL: certificate subject name" in unpickled.errorStr:
+				raise HTTPFetcherError("ssl: certificate subject mismatch")
+			elif "Failed to connect to " and "No route to host" in unpickled.errorStr:
+				raise HTTPFetcherError("no route to host")
+			elif "Failed to connect to " and "Connection refused" in unpickled.errorStr:
+				raise HTTPFetcherError("connection refused")
+			elif "gnutls_handshake() failed: Error in the pull function." in unpickled.errorStr:
+				raise HTTPFetcherError("gnutls: handshake fail in pull")
+			elif "gnutls_handshake() failed: Internal error" in unpickled.errorStr:
+				raise HTTPFetcherError("gnutls: handshake fail internal error")
+			elif "Empty reply from server" in unpickled.errorStr:
+				raise HTTPFetcherError("empty reply")
 			else:
 				raise HTTPFetcherError("Fetcher subprocess error: %s\n%s" % \
 					(unpickled.shortError, unpickled.errorStr))
